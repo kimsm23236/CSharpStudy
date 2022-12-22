@@ -208,6 +208,193 @@ namespace WhatIsArray
         }
         
     }
+
+    public enum SORT
+    {
+        SELECTION,
+        BURBLE,
+        MERGE
+    }
+    class Apples
+    {
+        public int[] randApples { get; set; } // 먹은 사과의 수 배열
+        public int[] sortedApple { get; set; } // MergeSort 시 사용할 임시 배열
+
+        private SORT koS { get; set; } // 정렬 함수 실행 시 정렬 방식을 결정할 열거형 변수
+
+        public Apples()
+        {
+            // Random 객체 생성
+            Random rd = new Random();
+            // 사과의 수 멤버 배열을 메모리에 할당
+            randApples = new int[1000];
+            // 정렬에 사용할 임시 배열을 메모리에 할당
+            sortedApple = new int[1000];
+            koS = SORT.MERGE;
+            Console.WriteLine("사과 배열 난수 생성");
+            int idx = 0;
+            do
+            {
+                int num = rd.Next(100, 10000 + 1);
+                if (!randApples.Contains(num))
+                {
+                    randApples[idx] = num;
+                    idx++;
+                }
+            }
+            while (idx <= randApples.GetUpperBound(0));
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    randApples[i] = rd.Next(100, 1000 + 1);
+            //}
+        }
+
+        public void printApples()
+        {
+            Console.WriteLine("배열을 출력 합니다.");
+            for(int i = 0; i < randApples.Length; i++)
+            {
+                Console.Write("{0,5} ", randApples[i]);
+                if ((i + 1) % 10 == 0)
+                    Console.WriteLine();
+            }
+        }
+
+        public void sortApple()
+        {
+            Console.WriteLine("배열을 {0} 정렬합니다.", koS);
+            switch(koS)
+            {
+                case SORT.SELECTION:
+                    selectionSort();
+                    break;
+                case SORT.BURBLE:
+                    burbleSort();
+                    break;
+                case SORT.MERGE:
+                    mergeSort(0, randApples.GetUpperBound(0));
+                    break;
+                default:
+                    break;
+            }  
+        }
+
+        public void selectionSort()
+        {
+            for(int i = 0; i < randApples.Length; i++)
+            {
+                int min = randApples[i];
+                int minidx = i;
+                for(int j = i + 1; j < randApples.Length; j++)
+                {
+                    if(min > randApples[j])
+                    {
+                        min = randApples[j];
+                        minidx = j;
+                    }
+                }
+
+                if(minidx != i)
+                {
+                    int temp = randApples[i];
+                    randApples[i] = randApples[minidx];
+                    randApples[minidx] = temp;
+                }
+            }
+        }
+
+        public void burbleSort()
+        {
+            for(int i = 0; i < randApples.Length;i++)
+            {
+                for(int j = 0; j < randApples.Length - 1; j++)
+                {
+                    if (randApples[j] > randApples[j+1])
+                    {
+                        int temp = randApples[j];
+                        randApples[j] = randApples[j+1];
+                        randApples[j+1] = temp;
+                    }
+                }
+            }
+        }
+
+        public void mergeSort(int left, int right)
+        {
+            if (left >= right)
+                return;
+
+            // 범위를 기반으로 중간 값 설정
+            int mid = (left + right) / 2;
+            // 나눈 중간을 기준으로 양옆으로 재귀하며 지정범위를 잘게 나눠주며 정렬
+            mergeSort(left, mid);
+            mergeSort(mid + 1, right);
+
+            // 병합하며 정렬하는 머지함수 실행
+            merge(left, mid, right);
+
+
+        }
+
+        public void merge(int left, int mid, int right)
+        {
+            
+            // 배열을 두개로 나누고
+            // 두개의 배열에서 작은 값을 임시 배열에 대입하는 것을 반복하여 임시 배열을 완성한 후
+            // 임시배열을 정식 배열에 대입하여 정렬
+
+            // 나눈 배열 중 왼쪽 배열의 첫번째 인덱스 변수
+            int i = left;
+            // 나눈 배열 중 오른쪽 배열의 첫번째 인덱스 변수
+            int j = mid + 1;
+            // 임시 배열에 대입을 위한 인덱스 변수
+            int k = left;
+
+            // 나머지 배열 인덱스 변수
+            int l;
+
+
+            while(i <= mid && j <= right)
+            {
+                // 나뉜 배열의 양 옆을 첫번째부터 비교하여
+                // 더 작은쪽을 임시 배열에 대입
+                // 이것을 나뉜 배열 중 한쪽에 끝에 다다를 때 까지
+                if (randApples[i] < randApples[j])
+                {
+                    sortedApple[k++] = randApples[i++];
+                }
+                else
+                {
+                    sortedApple[k++] = randApples[j++];
+                }
+            }
+
+            // 위에서 나눈 배열 중 한 쪽 배열의 값을 전부 임시 배열에 대입하고
+            // 남는 다른 한쪽의 배열을 임시배열에 추가로 대입
+            if(i > mid)
+            {
+                for(l = j; l <= right; l++)
+                {
+                    sortedApple[k++] = randApples[l];
+                }
+            }
+            else
+            {
+                for(l = i; l <= mid; l++)
+                {
+                    sortedApple[k++] = randApples[l];
+                }
+                
+            }
+
+            //  정렬된 임시 배열을 대입  
+            for(l = left; l <= right; l++)
+            {
+                randApples[l] = sortedApple[l];
+            } 
+        }
+    }
     // 클래스라는 것인데, c#에서는 모든 요소들이 클래스 안에 있어야 함.
     internal class Program
     {
@@ -444,20 +631,20 @@ namespace WhatIsArray
              */
 
             // 배열의 선언과 초기화
-            
-            int[] numbers = new int[5] {1, 2, 3, 4, 5 };
-            Console.WriteLine(numbers[0]);
-            Console.WriteLine(numbers.Length);
 
-            for(int i = 0; i < numbers.Length; i++)
-            {
-                Console.WriteLine(numbers[i]);
-            }
-            foreach(int element in numbers)
-            {
-                Console.WriteLine(element);
-            }
-            
+            //int[] numbers = new int[5] {1, 2, 3, 4, 5 };
+            //Console.WriteLine(numbers[0]);
+            //Console.WriteLine(numbers.Length);
+
+            //for(int i = 0; i < numbers.Length; i++)
+            //{
+            //    Console.WriteLine(numbers[i]);
+            //}
+            //foreach(int element in numbers)
+            //{
+            //    Console.WriteLine(element);
+            //}
+
 
             //int number1 = 1;
             //int number2 = 2;
@@ -466,6 +653,274 @@ namespace WhatIsArray
             //int number5 = 5;
 
             //Console.WriteLine(number1);
+
+            //int number = 1_0821;
+            //Console.WriteLine("64로 Mod 연산 {0}", number % 64);
+
+            /*
+             * 다차원 배열
+             * 2차원 배열, 3차원 배열 등 차원이 2개 이상인 배열을 다차원 배열이라고 한다.
+             * c#에서 배열을 선언할 때는 콤마를 기준으로 차원을 구분한다.
+             * 
+             */
+
+            //int[] oneArray = new int[2] { 1, 2 };
+            //int[,] twoArray = new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+            //int[,,] threeArray = new int[2, 2, 2]
+            //            {
+            //                { { 1, 2 }, { 3, 4 } },
+            //                { { 5, 6 }, { 7, 8 } }
+            //            };
+
+            // 3행 3열짜리 배열에서 행과 열이 같으면 1, 다르면 0을 출력
+            //int[,] twoArr = new int[3, 5];
+            //{
+            //    {1, 1, 1 },
+            //    {1, 1, 1 },
+            //    {1, 1, 1 }
+            //};
+            //int[] oneArr = new int[3] { 1, 2, 3 };
+            //for(int i = 0; i <= oneArr.GetUpperBound(0); i++)
+            //{
+            //    Console.Write("{0} ", oneArr[i]);
+            //}
+            //Console.WriteLine();
+
+            //for(int i = 0; i <= twoArr.GetUpperBound(0); i++)
+            //{
+            //    for(int j = 0; j <= twoArr.GetUpperBound(1); j++)
+            //    {
+            //        if (i == j)
+            //        {
+            //            twoArr[i, j] = 1;
+            //            Console.Write("{0} ", twoArr[i, j]);
+            //        }
+            //        else
+            //        {
+            //            twoArr[i, j] = 0;
+            //            Console.Write("{0} ", twoArr[i, j]);
+            //        }   
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            /*
+             * 가변 배열
+             * 차원이 2개 이상인 배열은 다차원 배열이고, 배열 길이가 가변 길이인 배열은 가변 배열이라고 한다.
+             */
+
+            //int[][] zagArray = new int[2][];
+            //zagArray[0] = new int[] { 1, 2 };
+            //zagArray[1] = new int[] { 3, 4, 5 };
+
+            //for(int i = 0; i < zagArray.Length; i++)
+            //{
+            //    for(int j = 0; j <  zagArray[i].Length; j++)
+            //    {
+            //        Console.Write("{0} ", zagArray[i][j]);
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            //// int형 배열 intArray 선언
+            //int[] intArray;
+            //// int형 데이터 타입의 변수 3개를 메모리에 할당
+            //intArray = new int[3];
+
+            //intArray[0] = 1;    // intArray 0번째 인덱스에 1이라는 정수 값을 대입
+            //intArray[1] = 2;    // intArray 1번째 인덱스에 2이라는 정수 값을 대입
+            //intArray[2] = 3;    // intArray 2번째 인덱스에 3이라는 정수 값을 대입
+
+            //// 배열을 직접 출력해본다.
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    Console.WriteLine("{0} 번째 인덱스의 값 -> {1}", i, intArray[i]);
+            //}
+
+            //for(int i = 0; i < 3; i++)
+            //{
+            //    Console.WriteLine();
+            //}
+
+            //// intArray 배열에서 int 형 데이터 타입의 값을 하나씩 뽑아서 num에 저장하여 사용할 것이다.
+            //foreach(int num in intArray)
+            //{
+            //    Console.WriteLine("intArray 배열에서 뽑아온 값 : {0} ", num);
+            //} // loop : intArray배열의 값 개수만큼 루프를 돈다.
+
+            //// 배열을 사용하여 국어 점수의 총점과 평균 구하기
+            //int[] arrKoreanGrade = new int[5] {10, 20, 50, 80, 99 };
+            //int sum = 0;
+            //float avr = 0.0f;
+            //for(int i = 0; i <= arrKoreanGrade.GetUpperBound(0); i++)
+            //{
+            //    sum += arrKoreanGrade[i];
+            //}
+
+            //avr = (float)sum / arrKoreanGrade.Length;
+
+            //Console.WriteLine("국어점수의 총점 : {0}", sum);
+            //Console.WriteLine("국어점수의 평균 : {0:F1}", avr);
+
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    Console.WriteLine();
+            //}
+
+            ///*
+            // * 위의 문제를 점수를 입력받아서 푸는 형식으로
+            // */
+
+            //int[] arrEnglishGrade = new int[3];
+            //for(int i = 0; i < arrEnglishGrade.Length; i++)
+            //{
+            //    Console.Write("{0} 번째 학생의 영어 점수를 입력하세요 : ", i + 1);
+            //    int.TryParse(Console.ReadLine(), out arrEnglishGrade[i]);
+            //    if (arrEnglishGrade[i] > 100 || arrEnglishGrade[i] < 1)
+            //    {
+            //        Console.WriteLine("[System Error] 입력한 범위가 잘못되었습니다.");
+            //        i--;
+            //    }
+
+
+            //}
+
+            //sum = 0;
+            //for (int i = 0; i <= arrEnglishGrade.GetUpperBound(0); i++)
+            //{
+            //    sum += arrEnglishGrade[i];
+            //}
+
+            //avr = (float)sum / arrEnglishGrade.Length;
+
+            //Console.WriteLine("영어점수의 총점 : {0}", sum);
+            //Console.WriteLine("영어점수의 평균 : {0:F1}", avr);
+
+
+            /*
+             * LAB 1. 배열에서 최대값 찾기
+             * 크기가 100인 배열을 1투버 100사이의 난수로 채우고 배열 요소 중에서 최대값을 찾아보자
+             */
+
+            // int 데이터 타입 변수의 배열 선언 및 메모리 할당
+            int[] numbs = new int[100];
+            // 난수 생성을 위한 Random 클래스 객체 생성
+            Random rd = new Random();
+
+            // int 배열 numbs의 크기만큼 반복하며 각각 난수 할당
+            for(int i = 0; i < numbs.Length; i++)
+            {
+                // numbs[i] * numbs 배열의 i번째 인덱스를 가리킴
+                // * numbs배열의 i번째 주소에 난수로 값을 할당
+                numbs[i] = rd.Next(1, 100 + 1);
+            }
+
+            // int 배열 numbs의 크기만큼 반복하며 값을 출력
+            for (int i = 0; i < numbs.Length; i++)
+            {
+                // {0, 3} * numbs[i]를 세 자리를 사용해 출력하겠다는 뜻
+                Console.Write("{0,3} ", numbs[i]);
+                // if와 Mod 연산을 이용해서 10번째 출력마다 줄바꿈
+                if ((i + 1) % 10 == 0)
+                    Console.WriteLine();
+            }
+
+            // *max 최대값 찾기 위한 int 형 변수
+            int max = 0;
+            // numbs의 수만큼 반복하며
+            // * int 형 변수 num을 선언, numbs의 내용을 하나씩 가져와 할당 후 반복문 내에서 사용하겠다는 의미
+            foreach(int num in numbs)
+            {
+                // 삼항 조건 연산자를 사용하여 최대값 갱신
+                max = max < num ? num : max;
+            }
+            Console.WriteLine("배열 중 최대 값은 {0} 입니다.", max);
+            Console.WriteLine();
+
+            /*
+             * LAB 2. 사과를 제일 좋아하는 사람 찾기
+             * 사람들 5명(사람1, 사람2, ...)에게 아침에 먹는 사과 개수를 입력하도록 요청하는 프로그램을 작성
+             * 데이터 입력이 마무리되면 누가 가장 많은 사과를 아침으로 먹었는지 출력한다.
+             * - 이상한 입력 예외처리
+             * - 제일 적게 먹은 사람도 찾도록 수정해보기
+             * - 먹은 사과의 개수 순으로 정렬
+             * - merge sort 도전해보기
+             *      - 정렬 도전 시 유저 입력 X
+             *      - 데이터는 난수로 100 ~ 1000 개 정도의 값
+             *      - 중복 제거.
+             *      - 시간초는 전혀 상관 없음
+             */
+
+            // 사과 개수 유저 입력 버전
+
+            // int 형 배열 선언 후 메모리 할당
+            int[] apples = new int[5];
+            // 최대값 최소값 체크를 위한 int 형 변수 선언
+            int maxNum = -1, minNum = 5000;
+
+            // apples의 길이만큼 반복하겠다는 반복문
+            for (int i = 0; i < apples.Length; i++)
+            {
+                // 사과 개수 입력을 받기 위한 출력문
+                Console.Write("{0}번째 사람이 먹은 사과 개수 :", i + 1);
+                // 입력받은 string을 int로 형변환하여 apples의 각 인덱스에 넣어준다.
+                int.TryParse(Console.ReadLine(), out apples[i]);
+
+                // TryParse가 실패하는 경우, 0을 반환하기에 0을 예외처리 조건으로 넣어줌
+                // ex) 특수문자를 입력하는 경우
+                if (apples[i] == 0)
+                {
+                    Console.WriteLine("[System Error] 잘 못 입력하였습니다.");
+                    // 입력에 실패했기에 인덱스 또한 다시 줄여준다.
+                    i--;
+                    continue;
+                }
+            }
+
+            // apples의 길이 만큼 반복하며, apples 배열의 값을 가져와 int 형 변수 ap를 선언 및 값을 할당하여 사용
+            foreach(int ap in apples)
+            {
+                // 삼항 조건 연산자를 사용하여 최대값 최소값 갱신
+                maxNum = maxNum < ap ? ap : maxNum;
+                minNum = minNum > ap ? ap : minNum;
+            }
+
+            // 출력
+            Console.WriteLine("가장 많이 먹은 사람은 {0}개를 먹었습니다.", maxNum);
+            Console.WriteLine("가장 적게 먹은 사람은 {0}개를 먹었습니다.", minNum);
+            Console.WriteLine();
+
+            // 사과 개수 난수 버전
+            // Apples 객체를 생성
+            Apples apples_ = new Apples();
+            // Apples 객체의 멤버 변수 배열을 출력하는 함수
+            apples_.printApples();
+            // Apples 객체의 멤버 변수 배열을 정렬하는 함수
+            apples_.sortApple();
+            // Apples 객체의 멤버 변수 배열을 출력하는 함수
+            apples_.printApples();
+
+            /*
+            int[] intMs = new int[100];
+            int rdnum = 0;
+            int index = 0;
+            while(index < 100)
+            {
+                rdnum = rd.Next(1, 1000);
+                if(!intMs.Contains(rdnum))
+                {
+                    intMs[index] = rdnum;
+                    index++;
+                }
+            }
+            */
+
+
+
+
+
+
+
             // 여기서 끝
         }
     }
