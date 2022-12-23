@@ -802,6 +802,7 @@ namespace WhatIsArray
              * 크기가 100인 배열을 1투버 100사이의 난수로 채우고 배열 요소 중에서 최대값을 찾아보자
              */
 
+            /*
             // int 데이터 타입 변수의 배열 선언 및 메모리 할당
             int[] numbs = new int[100];
             // 난수 생성을 위한 Random 클래스 객체 생성
@@ -836,6 +837,7 @@ namespace WhatIsArray
             }
             Console.WriteLine("배열 중 최대 값은 {0} 입니다.", max);
             Console.WriteLine();
+            */
 
             /*
              * LAB 2. 사과를 제일 좋아하는 사람 찾기
@@ -851,6 +853,7 @@ namespace WhatIsArray
              *      - 시간초는 전혀 상관 없음
              */
 
+            /*
             // 사과 개수 유저 입력 버전
 
             // int 형 배열 선언 후 메모리 할당
@@ -889,7 +892,9 @@ namespace WhatIsArray
             Console.WriteLine("가장 많이 먹은 사람은 {0}개를 먹었습니다.", maxNum);
             Console.WriteLine("가장 적게 먹은 사람은 {0}개를 먹었습니다.", minNum);
             Console.WriteLine();
+            */
 
+            /*
             // 사과 개수 난수 버전
             // Apples 객체를 생성
             Apples apples_ = new Apples();
@@ -899,7 +904,7 @@ namespace WhatIsArray
             apples_.sortApple();
             // Apples 객체의 멤버 변수 배열을 출력하는 함수
             apples_.printApples();
-
+            */
             /*
             int[] intMs = new int[100];
             int rdnum = 0;
@@ -914,6 +919,87 @@ namespace WhatIsArray
                 }
             }
             */
+
+            /*
+             * 사용자로부터 2개의 문자열을 읽어서 같은지 다른지 화면에 출력하는 프로그램 작성
+             * ex) 첫번째 문자열 : hello
+             *      두번째 문자열 : world
+             *      두개의 문자열은 다릅니다.
+             */
+
+            string str1, str2;
+            Console.Write("첫번째 문자열 : ");
+            str1 = Console.ReadLine();
+            Console.Write("두번째 문자열 : ");
+            str2 = Console.ReadLine();
+
+            if(str1.Length == str2.Length)
+            {
+                bool isEqual = true;
+                for(int i = 0; i < str1.Length; i++)
+                {
+                    if (str1[i] != str2[i])
+                    {
+                        isEqual = false;
+                    }
+                }
+                if(isEqual)
+                {
+                    Console.WriteLine("두개의 문자열은 같습니다.");
+                }
+                else
+                {
+                    Console.WriteLine("두개의 문자열은 다릅니다.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("두개의 문자열은 다릅니다.");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            /*
+             * 5개의 음료(콜라, 물, 스프라이트, 주스, 커피)를 판매하는 자판기 머신을 구현해보기
+             * 사용자가 1부터 5사이의 숫자를 입력하면
+             * 선택한 음료를 출력함
+             * 1 ~ 5 이외의 숫자를 선택하면 오류 메시지 출력
+             * ex) 콜라, 물, 스프라이트, 주스, 커피(1~5) 중에서 하나를 선택하세요 : 1
+             * 콜라를 선택하였습니다.
+             */
+
+            string[] drinks = new string[5] { "콜라", "물", "스프라이트", "주스", "커피" };
+            Console.Write("음료를 선택해주세요 (1. 콜라, 2. 물, 3. 스프라이트, 4. 주스, 5. 커피) : ");
+            int drNum = 0;
+            int.TryParse(Console.ReadLine(), out drNum);
+            if(drNum > 0 && drNum <= drinks.Length)
+            {
+                Console.WriteLine("{0}을(를) 선택하였습니다.", drinks[--drNum]);
+            }
+            else
+                Console.WriteLine("[System Error] 입력 범위가 잘못되었습니다.");
+            
+            Console.WriteLine();
+            Console.WriteLine();
+
+            /*
+             * 배열 days[]를 아래와 같이 초기화하고 배열 요소의 값을 다음과 같이 출력하는 프로그램 작성
+             * * 배열 days[] {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+             * ex) 1월은 31일까지 입니다.
+             *      2월은 29일까지 입니다.
+             *      .
+             *      .
+             *      .
+             *      
+             */
+            int[] days = new int[12] { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+            for(int i = 0; i < days.Length; i++)
+            {
+                Console.WriteLine("{0}월은 {1}일까지 입니다.", i + 1, days[i]);
+            }
+
+
 
 
 
