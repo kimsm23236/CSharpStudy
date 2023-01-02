@@ -28,7 +28,7 @@ namespace Poker
 
         public PokerGame() 
         {
-
+              bIsPlayerSelect = false;
         }
         public override void Init()
         {
@@ -53,7 +53,7 @@ namespace Poker
                 }
             }
             
-            Player = new PP_Player("김수민");
+            Player = new PP_Player("Player");
             Enemies = new PP_Enemy[cntPP-1];
             Point = 10000;
 
@@ -63,10 +63,10 @@ namespace Poker
             }
 
             PokerPlayers = new PokerPlayer[cntPP];
-            PokerPlayers[0] = Player;
-            for(int i = 1; i < cntPP; i++)
+            PokerPlayers[cntPP - 1] = Player;
+            for(int i = 0; i < cntPP - 1; i++)
             {
-                PokerPlayers[i] = Enemies[i-1];
+                PokerPlayers[i] = Enemies[i];
             }
 
             CurrentPhase = EPHASE.DRAW;
@@ -98,8 +98,6 @@ namespace Poker
 
         public override void Render()
         {
-            
-
             for(int i = 0; i < cntPP; i++)
             {
                 PokerPlayers[i].PrintCards(stringBuilder);
@@ -141,17 +139,17 @@ namespace Poker
             // 컴퓨터 두장 뽑기
             if(!bIsPlayerSelect)
             {
-                for (int i = 1; i < cntPP; i++)
+                for (int i = 0; i < cntPP-1; i++)
                 {
                     PokerPlayers[i].ExecuteIhrBehavior(trumpCard);
                 }
                 bIsPlayerSelect = true;
-                PP_Player player = (PP_Player)PokerPlayers[0];
+                PP_Player player = (PP_Player)PokerPlayers[cntPP-1];
                 player.IsChoice = true;
             }
             else // 플레이어 초이스 작업
             {
-                PokerPlayers[0].ExecuteIhrBehavior(trumpCard);
+                PokerPlayers[cntPP-1].ExecuteIhrBehavior(trumpCard);
             }
         }
     }

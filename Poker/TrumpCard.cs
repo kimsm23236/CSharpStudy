@@ -27,7 +27,7 @@ namespace Poker
                 tempDeck[i] = i + 1;
             }
 
-            Mark = new string[4] { "♥", "◆", "♠", "♣" };
+            Mark = new string[4] { "♠", "◆", "♥", "♣" };
         }
 
         public void SetDeck() // 임시 덱을 게임에서 사용할 카드 구조체 배열로 넣어주기
