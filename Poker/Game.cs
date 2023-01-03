@@ -22,10 +22,7 @@ namespace Poker
 
         public virtual void Render()
         {
-            Console.SetCursorPosition(0, 0);
-            Console.Write(stringBuilder.ToString());
-            Thread.Sleep(30);
-            stringBuilder = new StringBuilder();
+            
         }
     }
 }

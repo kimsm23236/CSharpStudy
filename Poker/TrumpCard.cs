@@ -17,6 +17,7 @@ namespace Poker
         public List<Card> Deck;
         public int[] tempDeck;
         private string[] Mark;
+ 
 
         public TrumpCard() 
         {
@@ -52,6 +53,14 @@ namespace Poker
                 SetCard.mark = mark;
                 Deck.Add(SetCard);
             }
+        }
+
+        public void SetupNewDeck()
+        {
+            Deck = new List<Card>();
+            tempDeck = newDeck();
+            ShuffleCard();
+            SetDeck();
         }
 
         public int[] newDeck()  // 
@@ -105,11 +114,6 @@ namespace Poker
             Deck.Remove(rollCard);
 
             return rollCard;
-        }
-
-        public void PrintCard(List<Card> cards)
-        {
-            
         }
     }
 }
