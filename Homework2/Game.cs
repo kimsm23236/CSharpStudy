@@ -128,7 +128,9 @@ namespace Homework
         }
         public void ShiftMap(GameMap nextMap)
         {
+            currentMap.ClearMap();
             currentMap = nextMap;
+            currentMap.InitMap();
             InitMap();
         }
         public async void OnSpawnTimer()

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Homework
 {
+    public delegate void FOnMapShiftDelegate();
+
     public class MapCreater
     {
         private int mapId;
@@ -32,7 +34,7 @@ namespace Homework
             int width = 15;
             int height = 15;
             GameMap newMap = new GameMap(mapId++, width, height);
-            newMap.InitWall();
+            newMap.CreateWall();
             return newMap;
         }
 
@@ -42,11 +44,12 @@ namespace Homework
             int width = random.Next(5, 20+1);
             int height = random.Next(5, 20+1);
             GameMap newMap = new GameMap(mapId++, width, height);
-            newMap.InitWall();
+            newMap.CreateWall();
             return newMap;
         }
 
     }
+
     public class GameMap
     {
         // 맵 고유번호
@@ -59,6 +62,7 @@ namespace Homework
         public List<GameMap> linkedMap;
         public List<Portal> portalList;
         public List<Wall> wallList;
+        public FOnMapShiftDelegate onmapshiftdelegate;
 
         public int ID
         {
@@ -135,7 +139,34 @@ namespace Homework
             }
         }
 
-        public void InitWall()
+        public void ClearMap()
+        {
+            InitWall(false);
+            InitPortal(false);
+        }
+        public void InitMap()
+        {
+            InitWall(true);
+            InitPortal(true);
+        }
+
+        public void InitPortal(bool enable)
+        {
+            foreach (Portal portal in portalList)
+            {
+                portal.Enabled = enable;
+            }
+        }
+
+        public void InitWall(bool enable)
+        {
+            foreach(Wall wall in wallList)
+            {
+                wall.Enabled = enable;
+            }
+        }
+
+        public void CreateWall()
         {
             for(int i = 0; i < height; i++)
             {
